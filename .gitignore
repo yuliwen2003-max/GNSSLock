@@ -1,0 +1,28 @@
+# Generated builds and device-local backups, diagnostics and screenshots
+/build/
+/.local/
+
+# Local SDK / editor configuration
+/local.properties
+/.idea/
+*.iml
+
+# Signing material and credentials stay on the developer's machine
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+
+# Compiled / packaged artifacts and logs
+*.apk
+*.aab
+*.dex
+*.class
+*.o
+*.so
+*.log
