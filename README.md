@@ -61,6 +61,17 @@ ADB 写入授权命令为 `adb shell pm grant com.yuliwen.gnsslock android.permi
 
 首次构建会自动在 `.local/debug.keystore` 创建调试签名；以后构建会沿用已有密钥。该文件不进入 Git 仓库，请自行私密备份，以便覆盖更新已安装的 APK。重新克隆后生成的密钥与其他机器不同，更新已有安装时应使用原签名密钥。
 
+发布版使用独立持久签名，构建与打包命令如下；原生组件构建参数仍支持 `-Ndk`：
+
+```powershell
+.\build.ps1 -Release
+.\build-native.ps1
+.\build-probes.ps1
+.\package-release.ps1
+```
+
+产物位于 `build/release/`，包括版本化 APK、Windows ADB 完整安装包和 SHA-256 校验文件。首次发布构建生成 `.local/release-signing.keystore` 与 `.local/release-signing.json`，后续构建会复用；两份文件需要一起私密备份，均不进入 Git。发布版不能覆盖之前使用调试签名的安装，且仍必须使用 ADB `-t`；详见 [发布版安装说明](RELEASE-INSTALL.md)。
+
 Root 后台安装 `gpslock-hal`、`gpslock-qmi-sv-append`、`gpslock-qmi-sv-split` 及控制脚本，位于 `/data/adb/gpslock/`。更新 APK 时也应更新配套组件。
 
 安装脚本授予 `WRITE_SECURE_SETTINGS` 与精确定位权限。APK 标记为 `testOnly`，必须通过 `adb install -t`（脚本已包含）安装，以使用 Android 为测试应用保留的隐藏设置读取能力。普通安装器不适用。普通功能使用 Android 原生接口；其他手机需要 ADB 授权及 HAL 的 `SATELLITE_BLOCKLIST` 支持，Root 分批策略只支持研究中精确匹配的固件。
